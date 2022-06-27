@@ -10,6 +10,6 @@ app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
-app.use('/user/', userRouter)
+app.use('/users/', userRouter)
 
 export default app
