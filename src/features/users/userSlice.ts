@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSelector, createSlice } from '@reduxjs/toolkit'
 import { User } from '../../types/user'
 import { getUsers } from './actions'
 
@@ -26,5 +26,18 @@ export const userSlice = createSlice({
     })
   },
 })
+
+export const selectUsers = createSelector(
+  [(state) => state.users],
+  (users): UserState => users
+)
+
+export const selectUser = createSelector(
+  [(state) => state.users, (state, userId) => userId],
+  (users: UserState, userId) => ({
+    isFetching: users.isFetching,
+    users: users.users.filter((user) => user.id === userId),
+  })
+)
 
 export default userSlice.reducer

@@ -4,6 +4,7 @@ import BaseCenter from '../../components/BaseCenter'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { getUsers } from './actions'
 import { User } from '../../types/user'
+import { selectUsers } from './userSlice'
 
 const dummyData: User[] = [
   {
@@ -23,7 +24,7 @@ const dummyData: User[] = [
 ]
 
 export default function UserList() {
-  const { isFetching, users } = useAppSelector((state) => state.users)
+  const { isFetching, users } = useAppSelector(selectUsers)
   const dispatch = useAppDispatch()
 
   useEffect(() => {
