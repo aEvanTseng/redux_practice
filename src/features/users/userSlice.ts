@@ -1,4 +1,8 @@
-import { createSelector, createSlice } from '@reduxjs/toolkit'
+import {
+  createEntityAdapter,
+  createSelector,
+  createSlice,
+} from '@reduxjs/toolkit'
 import { User } from '../../types/user'
 import { getUsers } from './actions'
 
@@ -7,10 +11,13 @@ interface UserState {
   users: Array<User>
 }
 
-const initialState: UserState = {
+const userAdapter = createEntityAdapter<User>({
+  sortComparer: (a, b) => 0,
+})
+
+const initialState = userAdapter.getInitialState({
   isFetching: false,
-  users: [],
-}
+})
 
 export const userSlice = createSlice({
   name: 'user',
@@ -22,14 +29,16 @@ export const userSlice = createSlice({
     })
     builder.addCase(getUsers.fulfilled, (state, action) => {
       state.isFetching = false
-      state.users = action.payload
+      userAdapter.setAll(state, action.payload)
     })
   },
 })
 
 export const selectUsers = createSelector(
-  [(state) => state.users],
-  (users): UserState => users
+  [(state) => state.users, (state) => state.users.ids],
+  ({ isFetching, entities }, ids: string[]) => {
+    return { isFetching, users: ids.map((id) => entities[id]) }
+  }
 )
 
 export const selectUser = createSelector(
